@@ -1,0 +1,45 @@
+POST  http://localhost:7071/api/CreateOrUpdateBook
+Content-Type: application/json
+
+{
+    id: 1,
+    upn: "someone@somewhere.com",
+    name: "Gone With The Wind",
+    isbn: "",
+    author: "Margaret Mitchell",
+    publicationYear: "1936",
+    publisher: "Macmillan",
+    rating: 5,
+    review: "great!",
+    notes: "something is really good",
+    thumbnailUrl: "https://en.wikipedia.org/wiki/Gone_with_the_Wind_(novel)#/media/File:Gone_with_the_Wind_cover.jpg"
+}
+
+###
+POST  http://localhost:7071/api/CreateOrUpdateBook
+Content-Type: application/json
+
+{
+    id: 1,
+    upn: "someone@somewhere.com",
+    name: "Gone With The Wind",
+    isbn: "",
+    author: "Margaret Mitchell",
+
+}
+
+###
+POST  http://localhost:7071/api/CreateOrUpdateBook
+Content-Type: application/json
+
+{
+    somethingDifferent: "error"
+}
+
+###
+POST  http://localhost:7071/api/CreateOrUpdateBook
+Content-Type: application/json
+
+{
+    name: "error"
+}

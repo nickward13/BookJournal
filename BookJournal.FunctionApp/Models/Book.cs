@@ -7,7 +7,7 @@ using Newtonsoft.Json.Serialization;
 
 namespace BookJournal.FunctionApp.Models
 {
-    class Book
+    public class Book
     {
         [JsonProperty("id")]
         public Guid Id { get; set; }

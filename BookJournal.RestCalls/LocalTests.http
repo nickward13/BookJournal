@@ -2,7 +2,6 @@ POST  http://localhost:7071/api/CreateOrUpdateBook
 Content-Type: application/json
 
 {
-    id: 1,
     upn: "someone@somewhere.com",
     name: "Gone With The Wind",
     isbn: "",
@@ -42,4 +41,13 @@ Content-Type: application/json
 
 {
     name: "error"
+}
+
+###
+POST  http://localhost:7071/api/CreateOrUpdateBook
+Content-Type: application/json
+
+{
+    name: "New Book",
+    upn: "someone@somewhere.com"
 }

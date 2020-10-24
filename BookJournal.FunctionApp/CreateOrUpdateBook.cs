@@ -16,27 +16,37 @@ namespace BookJournal.FunctionApp
     public static class CreateOrUpdateBook
     {
         [FunctionName("CreateOrUpdateBook")]
-        public static async Task<IActionResult> Run(
+        public static IActionResult Run(
             [HttpTrigger(AuthorizationLevel.Function, "post", Route = null)] HttpRequest req,
+            [CosmosDB(
+                databaseName: "BookJournal",
+            collectionName: "Books",
+            ConnectionStringSetting = "CosmosDbConnection")] out dynamic cosmosDoc,
             ILogger log)
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
 
-            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+            string requestBody = new StreamReader(req.Body).ReadToEnd();
+            cosmosDoc = null;
 
             try
             {
                 var inputBook = JsonConvert.DeserializeObject<Book>(requestBody);
                 ValidateBook(inputBook);
+                if(inputBook.Id == Guid.Empty)
+                {
+                    inputBook.Id = Guid.NewGuid();
+                }
+                cosmosDoc = inputBook;
                 log.LogInformation($"Recieved information for book: {inputBook.Name}");
                 return new OkObjectResult(inputBook);
             }
-            catch (BookNameNullException e)
+            catch (BookNameNullException)
             {
                 log.LogError($"No name passed for book");
                 return new BadRequestObjectResult($"Could not parse name in body");
             }
-            catch(NoUpnException e)
+            catch(NoUpnException)
             {
                 log.LogError($"No upn passed for book");
                 return new BadRequestObjectResult($"Could not parse upn in body");

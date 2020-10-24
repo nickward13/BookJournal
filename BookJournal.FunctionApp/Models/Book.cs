@@ -9,27 +9,27 @@ namespace BookJournal.FunctionApp.Models
 {
     class Book
     {
-        [JsonPropertyName("id")]
-        public string Id { get; set; }
-        [JsonPropertyName("upn")]
+        [JsonProperty("id")]
+        public Guid Id { get; set; }
+        [JsonProperty("upn")]
         public string Upn { get; set; }
-        [JsonPropertyName("name")]
+        [JsonProperty("name")]
         public string Name { get; set; }
-        [JsonPropertyName("isbn")]
+        [JsonProperty("isbn")]
         public string Isbn { get; set; }
-        [JsonPropertyName("author")]
+        [JsonProperty("author")]
         public string Author { get; set; }
-        [JsonPropertyName("publicationYear")]
+        [JsonProperty("publicationYear")]
         public string PublicationYear { get; set; }
-        [JsonPropertyName("publisher")] 
+        [JsonProperty("publisher")] 
         public string Publisher { get; set; }
-        [JsonPropertyName("rating")]
+        [JsonProperty("rating")]
         public string Rating { get; set; }
-        [JsonPropertyName("review")]
+        [JsonProperty("review")]
         public string Review { get; set; }
-        [JsonPropertyName("notes")]
+        [JsonProperty("notes")]
         public string Notes { get; set; }
-        [JsonPropertyName("thumbnailUrl")]
+        [JsonProperty("thumbnailUrl")]
         public string ThumbnailUrl { get; set; }
 
     }

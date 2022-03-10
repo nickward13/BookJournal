@@ -1,17 +1,19 @@
 param env string = 'dev'
 param sa_sku object = { 
   name: 'Standard_LRS'
- }
+}
+param location string = '${resourceGroup().location}'
 
 // Vars can contain runtime variable values
 var region = 'au'
 var company = 'hectagon'
 var saName = replace('${company}-sa-${env}-${region}', '-', '')
 var apimName = '${company}-apim-${env}-${region}'
+var aiName = '${company}-ai-${env}-${region}'
 
 resource sa 'Microsoft.Storage/storageAccounts@2021-08-01' = {
-  name: '${saName}'
-  location: '${resourceGroup().location}'
+  name: saName
+  location: location
   kind: 'StorageV2'
   sku: sa_sku
   properties:{
@@ -32,8 +34,8 @@ resource saBookCovers 'Microsoft.Storage/storageAccounts/blobServices/containers
 }
 
 resource apim 'Microsoft.ApiManagement/service@2021-08-01' = {
-  name: '${apimName}'
-  location: '${resourceGroup().location}'
+  name: apimName
+  location: location
   sku: {
     capacity: 0
     name: 'Consumption'
@@ -55,4 +57,22 @@ resource apimPolicy 'Microsoft.ApiManagement/service/policies@2019-12-01' = {
   }
 }
 
+resource ai 'Microsoft.Insights/components@2015-05-01' = {
+  name: aiName
+  location: location
+  kind: 'web'
+  properties:{
+    Application_Type:'web'
+  }
+}
 
+resource apimLogger 'Microsoft.ApiManagement/service/loggers@2019-12-01' = {
+  name: '${apim.name}/${apim.name}-logger'
+  properties:{
+    resourceId: '${ai.id}'
+    loggerType: 'applicationInsights'
+    credentials:{
+      instrumentationKey: '${ai.properties.InstrumentationKey}'
+    }
+  }
+}

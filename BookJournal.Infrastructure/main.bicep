@@ -31,3 +31,28 @@ resource saBookCovers 'Microsoft.Storage/storageAccounts/blobServices/containers
   name: '${sa.name}/default/book-covers'
 }
 
+resource apim 'Microsoft.ApiManagement/service@2021-08-01' = {
+  name: '${apimName}'
+  location: '${resourceGroup().location}'
+  sku: {
+    capacity: 0
+    name: 'Consumption'
+  }
+  identity: {
+    type: 'SystemAssigned'
+  }
+  properties:{
+    publisherName: 'Nick Ward'
+    publisherEmail: 'nickward@microsoft.com'
+  }
+}
+
+resource apimPolicy 'Microsoft.ApiManagement/service/policies@2019-12-01' = {
+  name: '${apim.name}/policy'
+  properties:{
+    format: 'rawxml'
+    value: '<policies><inbound /><backend><forward-request /></backend><outbound /><on-error /></policies>'
+  }
+}
+
+

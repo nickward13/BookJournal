@@ -26,3 +26,8 @@ resource saContainerApim 'Microsoft.Storage/storageAccounts/blobServices/contain
 resource saContainerApi 'Microsoft.Storage/storageAccounts/blobServices/containers@2019-06-01' = {
   name: '${sa.name}/default/api-files'
 }
+
+resource saBookCovers 'Microsoft.Storage/storageAccounts/blobServices/containers@2019-06-01' = {
+  name: '${sa.name}/default/book-covers'
+}
+

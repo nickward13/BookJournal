@@ -338,3 +338,6 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+
+# bicep output ARM templates
+BookJournal.Infrastructure/*.json

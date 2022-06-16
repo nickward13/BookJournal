@@ -14,20 +14,23 @@ namespace Hectagon
     {
         [FunctionName("PostJournalEntry")]
         public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] HttpRequest req,
             ILogger log)
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
 
-            string name = req.Query["name"];
-
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             dynamic data = JsonConvert.DeserializeObject(requestBody);
-            name = name ?? data?.name;
+            string name = data?.name;
+            string dateRead = data?.date;
+            string author = data?.author;
 
-            string responseMessage = string.IsNullOrEmpty(name)
-                ? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
-                : $"Hello, {name}. This HTTP triggered function executed successfully.";
+            if(string.IsNullOrEmpty(name) ||
+            string.IsNullOrEmpty(dateRead) ||
+            string.IsNullOrEmpty(author))
+                return new BadRequestResult();
+
+            string responseMessage = $"The book you read is called '{name}', written by '{author}' and you read it on {dateRead}.";
 
             return new OkObjectResult(responseMessage);
         }

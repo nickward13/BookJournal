@@ -5,6 +5,7 @@ namespace Hectagon.Models
 {
     public class Book
     {
+        public string UserId {get;set;}
         public string Name {get;set;}
         public string Author {get;set;}
         public List<Reading> Readings {get;set;}

@@ -14,24 +14,32 @@ namespace Hectagon
     public static class PostJournalEntry
     {
         [FunctionName("PostJournalEntry")]
-        public static async Task<IActionResult> Run(
+        public static ActionResult Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] HttpRequest req,
+            [CosmosDB(
+                databaseName: "BookJournal",
+                collectionName: "Books",
+                ConnectionStringSetting = "CosmosDBConnection"
+            )]out dynamic book,
             ILogger log)
         {
-            try{
             log.LogInformation("C# HTTP trigger function processed a request.");
 
-            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            dynamic data = JsonConvert.DeserializeObject(requestBody);
-
-            Book book = new Book()
+            book = new Book()
             {
-                Name = data?.name,
-                Author = data?.author,
-                Readings = new System.Collections.Generic.List<Reading>()
+                UserId = "12345"
             };
 
-            String readingDateString  = data?.date;
+            try{
+            
+            string requestBody = new StreamReader(req.Body).ReadToEnd();
+            dynamic data = JsonConvert.DeserializeObject(requestBody);
+
+            book.Name = (String)data?.name;
+            book.Author = (String)data?.author;
+            book.Readings = new System.Collections.Generic.List<Reading>();
+
+            String readingDateString  = (String)data?.date;
             Reading reading = new Reading()
             {
                 ReadingDate = DateOnly.Parse(readingDateString)
@@ -50,7 +58,7 @@ namespace Hectagon
             {
                 return new BadRequestObjectResult($"Incorrectly formatted date.\n\n{e.Message}");
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return new BadRequestResult();
             }

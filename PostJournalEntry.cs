@@ -7,6 +7,7 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Hectagon.Models;
 
 namespace Hectagon
 {
@@ -17,22 +18,37 @@ namespace Hectagon
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] HttpRequest req,
             ILogger log)
         {
+            try{
             log.LogInformation("C# HTTP trigger function processed a request.");
 
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             dynamic data = JsonConvert.DeserializeObject(requestBody);
-            string name = data?.name;
-            string dateRead = data?.date;
-            string author = data?.author;
 
-            if(string.IsNullOrEmpty(name) ||
-            string.IsNullOrEmpty(dateRead) ||
-            string.IsNullOrEmpty(author))
+            Book book = new Book()
+            {
+                Name = data?.name,
+                Author = data?.author,
+                Readings = new System.Collections.Generic.List<Reading>()
+            };
+
+            Reading reading = new Reading()
+            {
+                ReadingDate = DateOnly.Parse(data?.dateRead)
+            };
+
+            book.Readings.Add(reading);            
+
+            if(string.IsNullOrEmpty(book.Name) ||
+            string.IsNullOrEmpty(book.Author))
                 return new BadRequestResult();
 
-            string responseMessage = $"The book you read is called '{name}', written by '{author}' and you read it on {dateRead}.";
+            string responseMessage = $"The book you read is called '{book.Name}', written by '{book.Author}' and you read it on {book.Readings[0].ReadingDate}.";
 
             return new OkObjectResult(responseMessage);
+            } catch (Exception e)
+            {
+                return new BadRequestResult();
+            }
         }
     }
 }

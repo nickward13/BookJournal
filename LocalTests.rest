@@ -13,5 +13,5 @@ content-type: application/json
 {
     "name": "Gone With The Wind",
     "author": "Margaret Mitchell",
-    "date": "Wed, 21 Oct 2015 18:27:50 GMT"
+    "date": "6/17/2022"
 }

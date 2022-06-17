@@ -31,9 +31,10 @@ namespace Hectagon
                 Readings = new System.Collections.Generic.List<Reading>()
             };
 
+            String readingDateString  = data?.date;
             Reading reading = new Reading()
             {
-                ReadingDate = DateOnly.Parse(data?.dateRead)
+                ReadingDate = DateOnly.Parse(readingDateString)
             };
 
             book.Readings.Add(reading);            
@@ -45,7 +46,11 @@ namespace Hectagon
             string responseMessage = $"The book you read is called '{book.Name}', written by '{book.Author}' and you read it on {book.Readings[0].ReadingDate}.";
 
             return new OkObjectResult(responseMessage);
-            } catch (Exception e)
+            } catch (FormatException e)
+            {
+                return new BadRequestObjectResult($"Incorrectly formatted date.\n\n{e.Message}");
+            }
+            catch (Exception e)
             {
                 return new BadRequestResult();
             }
